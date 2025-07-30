@@ -1,8 +1,7 @@
-# render.yaml
 services:
-  - type: web
+  - type: worker  # 🔁 NOT "web"
     name: telegram-bot
     runtime: python
-    buildCommand: ""
-    startCommand: python bot.py
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python bot.py"
     plan: free
