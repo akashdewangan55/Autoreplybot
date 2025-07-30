@@ -3,7 +3,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, BotCommand
 import json
 import os
 
-API_KEY = 'YOUR_API_KEY'  # Replace with your actual Bot API key
+API_KEY = '8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8'  # Replace with your actual Bot API key
 bot = telebot.TeleBot(API_KEY)
 
 DATA_FILE = 'keywords.json'
