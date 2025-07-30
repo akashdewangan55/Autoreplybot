@@ -1,11 +1,13 @@
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, BotCommand
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import json
 import os
 
-API_KEY = '8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8'  # Replace with your actual Bot API key
+# Replace with your BotFather API key
+API_KEY = '8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8'
 bot = telebot.TeleBot(API_KEY)
 
+# JSON file path
 DATA_FILE = 'keywords.json'
 
 # Load keywords from file
@@ -15,12 +17,12 @@ if os.path.exists(DATA_FILE):
 else:
     keywords = {}
 
-# Save keywords to file
+# Save function
 def save_keywords():
     with open(DATA_FILE, 'w') as f:
         json.dump(keywords, f, indent=4)
 
-# /start command
+# Handle /start
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     markup = InlineKeyboardMarkup()
@@ -35,7 +37,7 @@ def handle_start(message):
         reply_markup=markup
     )
 
-# Handle Start button
+# Handle button press
 @bot.callback_query_handler(func=lambda call: call.data == "start_add_keyword")
 def callback_start(call):
     msg = bot.send_message(call.message.chat.id, "Please type your keyword:")
@@ -55,12 +57,13 @@ def save_keyword_pair(message, keyword):
     save_keywords()
     bot.send_message(message.chat.id, "✅ Your keyword has been saved successfully.")
 
-# Auto-reply to keywords in groups
-@bot.message_handler(func=lambda message: message.chat.type in ['group', 'supergroup'] and not message.text.startswith('/'), content_types=['text'])
+# Auto-reply in groups
+@bot.message_handler(func=lambda message: True, content_types=['text'])
 def auto_reply(message):
-    key = message.text.strip().lower()
-    if key in keywords:
-        bot.reply_to(message, keywords[key])
+    if message.chat.type in ['group', 'supergroup']:
+        key = message.text.strip().lower()
+        if key in keywords:
+            bot.reply_to(message, keywords[key])
 
 # /list command
 @bot.message_handler(commands=['list'])
@@ -91,12 +94,12 @@ def delete_keyword(message):
 def settings(message):
     bot.send_message(message.chat.id, "Settings feature is coming soon...")
 
-# Set bot commands
+# Set commands
 bot.set_my_commands([
-    BotCommand("/start", "Start the bot"),
-    BotCommand("/list", "View all keywords"),
-    BotCommand("/remove", "Delete a keyword"),
-    BotCommand("/settings", "Bot settings"),
+    telebot.types.BotCommand("/start", "Start the bot"),
+    telebot.types.BotCommand("/list", "View all keywords"),
+    telebot.types.BotCommand("/remove", "Delete a keyword"),
+    telebot.types.BotCommand("/settings", "Bot settings"),
 ])
 
 print("Bot is running...")
