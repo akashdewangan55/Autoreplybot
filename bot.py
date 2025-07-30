@@ -56,12 +56,11 @@ def save_keyword_pair(message, keyword):
     bot.send_message(message.chat.id, "✅ Your keyword has been saved successfully.")
 
 # Auto-reply to keywords in groups
-@bot.message_handler(func=lambda message: True, content_types=['text'])
+@bot.message_handler(func=lambda message: message.chat.type in ['group', 'supergroup'] and not message.text.startswith('/'), content_types=['text'])
 def auto_reply(message):
-    if message.chat.type in ['group', 'supergroup']:
-        key = message.text.strip().lower()
-        if key in keywords:
-            bot.reply_to(message, keywords[key])
+    key = message.text.strip().lower()
+    if key in keywords:
+        bot.reply_to(message, keywords[key])
 
 # /list command
 @bot.message_handler(commands=['list'])
