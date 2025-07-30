@@ -5,7 +5,7 @@ import os
 
 # Replace with your BotFather API key
 API_KEY = '8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8'
-bot = telebot.TeleBot(8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8)
+bot = telebot.TeleBot(API_KEY)
 
 # JSON file path
 DATA_FILE = 'keywords.json'
