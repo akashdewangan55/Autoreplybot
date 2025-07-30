@@ -1,0 +1,8 @@
+# render.yaml
+services:
+  - type: web
+    name: telegram-bot
+    runtime: python
+    buildCommand: ""
+    startCommand: python bot.py
+    plan: free
