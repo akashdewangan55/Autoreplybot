@@ -28,9 +28,9 @@ def handle_start(message):
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("Start", callback_data="start_add_keyword"))
     bot.send_message(message.chat.id,
-        "Welcome to the *AiTricker Bot!*\n"
+        "Welcome to the *Daily Earn Bot!*\n"
         "I can help you auto-reply in your Telegram group using keywords.\n\n"
-        "➤ Join our Telegram Group: https://t.me/officialAiTricker\n"
+        "➤ Join our Telegram Group: https://t.me/dailyearn11\n"
         "➤ Subscribe to our YouTube Channel: https://youtube.com/@aitricker\n\n"
         "*Tap 'Start' below to add a keyword + link.*",
         parse_mode="Markdown",
