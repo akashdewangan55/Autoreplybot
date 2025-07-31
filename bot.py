@@ -30,7 +30,7 @@ def handle_start(message):
     bot.send_message(message.chat.id,
         "Welcome to the *Daily Earn Bot!*\n"
         "I can help you auto-reply in your Telegram group using keywords.\n\n"
-        "➤ Join our Telegram Group: https://t.me/dailyearn11\n"
+        "➤ Join our Telegram Group: https://t.me/dailyearn20\n"
         "➤ Subscribe to our YouTube Channel: https://youtube.com/@earningtricks2\n\n"
         "*Tap 'Start' below to add a keyword + link.*",
         parse_mode="Markdown",
