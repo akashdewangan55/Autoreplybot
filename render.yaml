@@ -1,8 +1,9 @@
-# render.yaml
 services:
   - type: web
     name: telegram-bot
-    runtime: python
-    buildCommand: ""
-    startCommand: python bot.py
-    plan: free
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
+    envVars:
+      - key: BOT_TOKEN
+        sync: false  # You’ll set it manually in Render UI
