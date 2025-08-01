@@ -1,28 +1,27 @@
-import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-import json
 import os
+import json
+import telebot
+from flask import Flask, request
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, BotCommand
 
-# Replace with your BotFather API key
-API_KEY = '8403889292:AAH1F2ZhT46F23satXQb0RIZLtvVU4VtMi8'
+# === Telegram Bot Setup ===
+API_KEY = os.environ.get("BOT_TOKEN")  # Safer: use Render env var
 bot = telebot.TeleBot(API_KEY)
+app = Flask(__name__)
 
-# JSON file path
+# === Load / Save Keywords ===
 DATA_FILE = 'keywords.json'
+keywords = {}
 
-# Load keywords from file
 if os.path.exists(DATA_FILE):
     with open(DATA_FILE, 'r') as f:
         keywords = json.load(f)
-else:
-    keywords = {}
 
-# Save function
 def save_keywords():
     with open(DATA_FILE, 'w') as f:
         json.dump(keywords, f, indent=4)
 
-# Handle /start
+# === Bot Commands ===
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     markup = InlineKeyboardMarkup()
@@ -37,7 +36,6 @@ def handle_start(message):
         reply_markup=markup
     )
 
-# Handle button press
 @bot.callback_query_handler(func=lambda call: call.data == "start_add_keyword")
 def callback_start(call):
     msg = bot.send_message(call.message.chat.id, "Please type your keyword:")
@@ -57,7 +55,6 @@ def save_keyword_pair(message, keyword):
     save_keywords()
     bot.send_message(message.chat.id, "✅ Your keyword has been saved successfully.")
 
-# Auto-reply in groups
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def auto_reply(message):
     if message.chat.type in ['group', 'supergroup']:
@@ -65,7 +62,6 @@ def auto_reply(message):
         if key in keywords:
             bot.reply_to(message, keywords[key])
 
-# /list command
 @bot.message_handler(commands=['list'])
 def list_keywords(message):
     if keywords:
@@ -74,7 +70,6 @@ def list_keywords(message):
     else:
         bot.send_message(message.chat.id, "No keywords saved yet.")
 
-# /remove command
 @bot.message_handler(commands=['remove'])
 def remove_keyword(message):
     msg = bot.send_message(message.chat.id, "Type the keyword you want to delete:")
@@ -89,18 +84,29 @@ def delete_keyword(message):
     else:
         bot.send_message(message.chat.id, "Keyword not found.")
 
-# /settings placeholder
 @bot.message_handler(commands=['settings'])
 def settings(message):
     bot.send_message(message.chat.id, "Settings feature is coming soon...")
 
-# Set commands
+# === Set Bot Commands ===
 bot.set_my_commands([
-    telebot.types.BotCommand("/start", "Start the bot"),
-    telebot.types.BotCommand("/list", "View all keywords"),
-    telebot.types.BotCommand("/remove", "Delete a keyword"),
-    telebot.types.BotCommand("/settings", "Bot settings"),
+    BotCommand("/start", "Start the bot"),
+    BotCommand("/list", "View all keywords"),
+    BotCommand("/remove", "Delete a keyword"),
+    BotCommand("/settings", "Bot settings"),
 ])
 
-print("Bot is running...")
-bot.infinity_polling()
+# === Flask Webhook Routes ===
+@app.route('/')
+def index():
+    return "Bot is running!"
+
+@app.route(f"/webhook/{API_KEY}", methods=['POST'])
+def webhook():
+    update = telebot.types.Update.de_json(request.data.decode("utf-8"))
+    bot.process_new_updates([update])
+    return "OK", 200
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
