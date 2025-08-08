@@ -27,7 +27,7 @@ def handle_start(message):
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("Start", callback_data="start_add_keyword"))
     bot.send_message(message.chat.id,
-        "Welcome to the *Daily Earn Bot!*\n"
+        "Welcome to the *Auto Reply Bot!*\n"
         "I can help you auto-reply in your Telegram group using keywords.\n\n"
         "➤ Join our Telegram Group: https://t.me/dailyearn20\n"
         "➤ Subscribe to our YouTube Channel: https://youtube.com/@earningtricks2\n\n"
